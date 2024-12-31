@@ -1,6 +1,5 @@
 import { IsString, Length } from 'class-validator';
-import { IsLoginUnique } from '../validators/is-login-unique';
-import { UserEntity } from '../entities/user.entity';
+import { IsLoginUnique, IsValidPassword } from '../validators';
 
 export class CreateUserDto {
   @IsString()
@@ -8,9 +7,6 @@ export class CreateUserDto {
   @IsLoginUnique({ message: 'This login is already taken' })
   login: string;
 
-  @IsString()
-  @Length(8, 66, {
-    message: 'Password must be between 8 and 66 characters long',
-  })
+  @IsValidPassword()
   password: string;
 }

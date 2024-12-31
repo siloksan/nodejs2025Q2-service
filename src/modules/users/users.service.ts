@@ -1,9 +1,14 @@
-import { Injectable } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { db } from 'src/database';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-password.dto';
 import { UserEntity } from './entities/user.entity';
 import { v4 as uuidv4 } from 'uuid';
+import { ERROR_MESSAGE } from 'src/common/constants/error-message';
 
 @Injectable()
 export class UsersService {
@@ -26,18 +31,42 @@ export class UsersService {
   }
 
   findAll() {
-    return Array.from(this.users.values());
+    return Array.from(this.users.values()).map((user) => new UserEntity(user));
   }
 
   findOne(id: string) {
-    return `This action returns a #${id} user`;
+    const user = this.users.get(id);
+
+    if (!user) {
+      throw new NotFoundException(ERROR_MESSAGE.ENTITY_NOT_FOUND('User', id));
+    }
+
+    return new UserEntity(this.users.get(id));
   }
 
   update(id: string, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+    const user = this.users.get(id);
+
+    if (!user) {
+      throw new NotFoundException(ERROR_MESSAGE.ENTITY_NOT_FOUND('User', id));
+    }
+
+    if (user.password !== updateUserDto.oldPassword) {
+      throw new ForbiddenException(ERROR_MESSAGE.INCORRECT_OLD_PASSWORD);
+    }
+
+    user.password = updateUserDto.newPassword;
+    user.version += 1;
+    user.updatedAt = Date.now();
+
+    return new UserEntity(user);
   }
 
   remove(id: string) {
-    return `This action removes a #${id} user`;
+    if (!this.users.has(id)) {
+      throw new NotFoundException(ERROR_MESSAGE.ENTITY_NOT_FOUND('User', id));
+    }
+
+    this.users.delete(id);
   }
 }

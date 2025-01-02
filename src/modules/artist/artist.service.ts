@@ -3,12 +3,17 @@ import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
 import { ArtistEntity } from './entities/artist.entity';
 import { v4 as uuidv4 } from 'uuid';
-import { db } from 'src/database';
+import { DataBase } from 'src/database/database.service';
 import { CODE_STATUS } from 'src/common/constants';
+import { ENTITIES_NAME } from 'src/common/constants/entities-name';
 
 @Injectable()
 export class ArtistService {
-  private readonly artists = db.artists;
+  private readonly artists: Map<string, ArtistEntity>;
+  constructor(private readonly db: DataBase) {
+    this.artists = db.artists;
+  }
+
   create(createArtistDto: CreateArtistDto) {
     const id = uuidv4();
     const newArtist: ArtistEntity = {
@@ -52,10 +57,10 @@ export class ArtistService {
   }
 
   remove(id: string) {
-    if (!this.artists.has(id)) {
+    if (!this.db.checkEntityExists(ENTITIES_NAME.ARTISTS, id)) {
       return { status: CODE_STATUS.NOT_FOUND };
     }
 
-    this.artists.delete(id);
+    this.db.removeEntity(ENTITIES_NAME.ARTISTS, id);
   }
 }

@@ -8,7 +8,6 @@ import { SWAGGER_PATH } from './swagger.const';
 export class AppSwaggerModule {
   static setup(app) {
     const apiDocPath = resolve(process.cwd(), 'doc/api.yaml');
-    console.log('apiDocPath: ', apiDocPath);
     const swaggerDocument = yaml.load(apiDocPath);
 
     SwaggerModule.setup(SWAGGER_PATH, app, swaggerDocument, {

@@ -5,7 +5,7 @@ import {
   ValidatorConstraint,
   ValidatorConstraintInterface,
 } from 'class-validator';
-import { db } from 'src/database';
+import { db } from 'src/database/database.service';
 
 @ValidatorConstraint({ async: true })
 @Injectable()

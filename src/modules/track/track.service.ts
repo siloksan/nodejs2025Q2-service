@@ -2,12 +2,17 @@ import { Injectable } from '@nestjs/common';
 import { TrackDto } from './dto/track.dto';
 import { TrackEntity } from './entities/track.entity';
 import { v4 as uuidv4 } from 'uuid';
-import { db } from 'src/database';
+import { DataBase } from 'src/database/database.service';
 import { CODE_STATUS } from 'src/common/constants';
+import { ENTITIES_NAME } from 'src/common/constants/entities-name';
 
 @Injectable()
 export class TrackService {
-  private readonly tracks = db.tracks;
+  private readonly tracks: Map<string, TrackEntity>;
+  constructor(private readonly db: DataBase) {
+    this.tracks = db.tracks;
+  }
+
   create(trackDto: TrackDto) {
     const id = uuidv4();
     const newTrack: TrackEntity = {
@@ -55,10 +60,10 @@ export class TrackService {
   }
 
   remove(id: string) {
-    if (!this.tracks.has(id)) {
+    if (!this.db.checkEntityExists(ENTITIES_NAME.TRACKS, id)) {
       return { status: CODE_STATUS.NOT_FOUND };
     }
 
-    this.tracks.delete(id);
+    this.db.removeEntity(ENTITIES_NAME.TRACKS, id);
   }
 }

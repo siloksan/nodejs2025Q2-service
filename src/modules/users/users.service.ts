@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { db } from 'src/database';
+import { DataBase, db } from 'src/database/database.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-password.dto';
 import { UserEntity } from './entities/user.entity';
@@ -8,7 +8,10 @@ import { CODE_STATUS } from 'src/common/constants/http-errors';
 
 @Injectable()
 export class UsersService {
-  private readonly users = db.users;
+  private readonly users: Map<string, UserEntity>;
+  constructor(private readonly db: DataBase) {
+    this.users = db.users;
+  }
   create(createUserDto: CreateUserDto) {
     const id = uuidv4();
     const timestamp = Date.now();

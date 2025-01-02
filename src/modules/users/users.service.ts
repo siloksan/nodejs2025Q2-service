@@ -1,14 +1,10 @@
-import {
-  ForbiddenException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { db } from 'src/database';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-password.dto';
 import { UserEntity } from './entities/user.entity';
 import { v4 as uuidv4 } from 'uuid';
-import { ERROR_MESSAGE } from 'src/common/constants/error-message';
+import { CODE_STATUS } from 'src/common/constants/http-errors';
 
 @Injectable()
 export class UsersService {
@@ -38,7 +34,7 @@ export class UsersService {
     const user = this.users.get(id);
 
     if (!user) {
-      throw new NotFoundException(ERROR_MESSAGE.ENTITY_NOT_FOUND('User', id));
+      return { status: CODE_STATUS.NOT_FOUND };
     }
 
     return new UserEntity(this.users.get(id));
@@ -48,11 +44,11 @@ export class UsersService {
     const user = this.users.get(id);
 
     if (!user) {
-      throw new NotFoundException(ERROR_MESSAGE.ENTITY_NOT_FOUND('User', id));
+      return { status: CODE_STATUS.NOT_FOUND };
     }
 
     if (user.password !== updateUserDto.oldPassword) {
-      throw new ForbiddenException(ERROR_MESSAGE.INCORRECT_OLD_PASSWORD);
+      return { status: CODE_STATUS.FORBIDDEN };
     }
 
     user.password = updateUserDto.newPassword;
@@ -64,7 +60,7 @@ export class UsersService {
 
   remove(id: string) {
     if (!this.users.has(id)) {
-      throw new NotFoundException(ERROR_MESSAGE.ENTITY_NOT_FOUND('User', id));
+      return { status: CODE_STATUS.NOT_FOUND };
     }
 
     this.users.delete(id);

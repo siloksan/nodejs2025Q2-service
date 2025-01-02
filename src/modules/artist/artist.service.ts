@@ -35,7 +35,7 @@ export class ArtistService {
       return { status: CODE_STATUS.NOT_FOUND };
     }
 
-    return new ArtistEntity(this.artists.get(id));
+    return new ArtistEntity(artist);
   }
 
   update(id: string, updateArtistDto: UpdateArtistDto) {

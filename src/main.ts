@@ -32,4 +32,5 @@ async function bootstrap() {
     `Swagger доступен по адресу: http://localhost:${PORT}/${SWAGGER_PATH}`,
   );
 }
+
 bootstrap();

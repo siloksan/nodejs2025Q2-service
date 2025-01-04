@@ -2,8 +2,19 @@ version: '3'
 services:
   node:
     build: .
+    develop:
+      watch:
+        - action: sync
+          path: ./src
+          target: /usr/app/src
+          ignore:
+            - node_modules/
+        - action: rebuild
+          path: package.json
     ports:
       - ${PORT}:${PORT}
+    networks:
+      - custom-network
     depends_on:
       - postgres
     environment:
@@ -12,7 +23,18 @@ services:
     build: ./database
     ports:
       - ${POSTGRES_PORT}:${POSTGRES_PORT}
+    networks:
+      - custom-network
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
+
+networks:
+  custom-network:
+    driver: bridge
+    internal: true
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.20.0.0/16

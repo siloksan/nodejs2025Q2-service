@@ -13,6 +13,7 @@ export class UsersService {
     this.users = db.users;
   }
   create(createUserDto: CreateUserDto) {
+    // [SelfReview]: It's better create separate helper for this logic
     const id = uuidv4();
     const timestamp = Date.now();
     const newUser: UserEntity = {
@@ -36,6 +37,7 @@ export class UsersService {
   findOne(id: string) {
     const user = this.users.get(id);
 
+    // [SelfReview]: It's better throw an exception and catch it in the controller
     if (!user) {
       return { status: CODE_STATUS.NOT_FOUND };
     }

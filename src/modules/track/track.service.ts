@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { TrackDto } from './dto/track.dto';
 import { TrackEntity } from './entities/track.entity';
 import { v4 as uuidv4 } from 'uuid';
-import { DataBase } from 'src/database/database.service';
+import { DataBase } from 'src/database/in-memory-db/database.service';
 import { CODE_STATUS } from 'src/common/constants';
 import { ENTITIES_NAME } from 'src/common/constants/entities-name';
 

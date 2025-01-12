@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CODE_STATUS } from 'src/common/constants';
 import { EntitiesName } from 'src/common/constants/entities-name';
-import { DataBase } from 'src/database/database.service';
+import { DataBase } from 'src/database/in-memory-db/database.service';
 
 @Injectable()
 export class FavoritesService {

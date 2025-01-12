@@ -6,7 +6,8 @@ import { ArtistModule } from './modules/artist/artist.module';
 import { TrackModule } from './modules/track/track.module';
 import { AlbumModule } from './modules/album/album.module';
 import { FavoritesModule } from './modules/favorites/favorites.module';
-import { DataBaseModule } from './database/database.module';
+import { DataBaseModule } from './database/in-memory-db/database.module';
+import { PrismaModule } from './database/prisma-module/prisma.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { DataBaseModule } from './database/database.module';
     AlbumModule,
     FavoritesModule,
     DataBaseModule,
+    PrismaModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -4,5 +4,5 @@ dist
 Dockerfile
 docker-compose.yml
 *.log
-.env
 .editorconfig
+.env

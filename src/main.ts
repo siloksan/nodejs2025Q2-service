@@ -29,8 +29,10 @@ async function bootstrap() {
   await app.listen(PORT);
 
   console.log(
-    `Swagger доступен по адресу: http://localhost:${PORT}/${SWAGGER_PATH}`,
+    `Swagger available on the address: http://localhost:${PORT}/${SWAGGER_PATH}`,
   );
+
+  console.log(`Server run on the address: http://localhost:${PORT}`);
 }
 
 bootstrap();

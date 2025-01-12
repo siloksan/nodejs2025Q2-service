@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { DataBase, db } from 'src/database/database.service';
+import { DataBase } from 'src/database/in-memory-db/database.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-password.dto';
 import { UserEntity } from './entities/user.entity';
 import { v4 as uuidv4 } from 'uuid';
 import { CODE_STATUS } from 'src/common/constants/http-errors';
+import { isLoginUnique } from './validators';
 
 @Injectable()
 export class UsersService {
@@ -16,9 +17,10 @@ export class UsersService {
     // [SelfReview]: It's better create separate helper for this logic
     const id = uuidv4();
     const timestamp = Date.now();
+    const { login } = createUserDto;
     const newUser: UserEntity = {
       id,
-      login: createUserDto.login,
+      login,
       password: createUserDto.password,
       version: 1,
       createdAt: timestamp,

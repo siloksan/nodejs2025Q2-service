@@ -1,40 +1,44 @@
-version: '3'
 services:
-  node:
+  postgres:
+    build: ./database
+    ports:
+      - ${POSTGRES_PORT}:5432
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - custom-network
+
+  app:
     build: .
+    depends_on:
+      - postgres
+    ports:
+      - ${PORT}:${PORT}
+    restart: on-failure
+    env_file:
+      - .env
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}?schema=public
+    # volumes:
+    #   - ./src:/app/src
     develop:
       watch:
         - action: sync
           path: ./src
-          target: /usr/app/src
+          target: /app/src
           ignore:
             - node_modules/
         - action: rebuild
           path: package.json
-    ports:
-      - ${PORT}:${PORT}
     networks:
       - custom-network
-    depends_on:
-      - postgres
-    environment:
-      - PORT=${PORT}
-  postgres:
-    build: ./database
-    ports:
-      - ${POSTGRES_PORT}:${POSTGRES_PORT}
-    networks:
-      - custom-network
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
+
+volumes:
+  postgres-data:
 
 networks:
   custom-network:
     driver: bridge
-    internal: true
-    ipam:
-      driver: default
-      config:
-        - subnet: 172.20.0.0/16

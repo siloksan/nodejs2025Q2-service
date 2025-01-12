@@ -2,16 +2,13 @@ import { Injectable } from '@nestjs/common';
 import { AlbumDto } from './dto/album.dto';
 import { AlbumEntity } from './entities/album.entity';
 import { v4 as uuidv4 } from 'uuid';
-import { DataBase } from 'src/database/database.service';
+import { DataBase } from 'src/database/in-memory-db/database.service';
 import { CODE_STATUS } from 'src/common/constants';
 import { ENTITIES_NAME } from 'src/common/constants/entities-name';
 
 @Injectable()
 export class AlbumService {
-  // private readonly albums: Map<string, AlbumEntity>;
-  constructor(private readonly db: DataBase) {
-    // this.albums = db.albums;
-  }
+  constructor(private readonly db: DataBase) {}
 
   create(albumDto: AlbumDto) {
     const id = uuidv4();

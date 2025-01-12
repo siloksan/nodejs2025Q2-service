@@ -1,7 +1,14 @@
-FROM node:22.9-alpine
-WORKDIR /usr/app
-COPY package*.json .
-RUN npm install --force
+FROM node:22-alpine3.20 AS build
+
+WORKDIR /app
+
+COPY package*.json ./
+RUN npm ci
+
 COPY . .
-EXPOSE 4000
-CMD [ "npm", "run", "start:dev" ]
+
+COPY prisma ./prisma/
+
+EXPOSE $PORT
+
+CMD ["sh", "/app/entrypoint.sh"]

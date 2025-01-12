@@ -2,151 +2,188 @@
 
 ## Prerequisites
 
-- Git - [Download & Install Git](https://git-scm.com/downloads).
-- Node.js - [Download & Install Node.js](https://nodejs.org/en/download/) and the npm package manager.
+Before starting, ensure you have the following installed on your system:
 
-## Downloading
+- **Git** - [Download & Install Git](https://git-scm.com/downloads).
+- **Node.js** - [Download & Install Node.js](https://nodejs.org/en/download/) (includes npm, the Node.js package manager).
+- **Docker** (Optional) - [Download & Install Docker](https://www.docker.com/products/docker-desktop).
 
+## Downloading the Repository
+
+Clone the repository to your local machine:
+
+```bash
+git clone <repository URL>
+cd <repository-folder>
 ```
-git clone {repository URL}
-```
 
-## Installing NPM modules
+## Installing Dependencies
 
-```
+Install all necessary npm modules:
+
+```bash
 npm install
 ```
 
-## Running application
+## Running the Application
 
-```
+Start the application with:
+
+```bash
 npm start
 ```
 
-After starting the app on port (4000 as default) you can open
-in your browser OpenAPI documentation by typing http://localhost:4000/doc/.
-For more information about OpenAPI/Swagger please visit https://swagger.io/.
+By default, the application will start on port **4000**. Once started, you can access the OpenAPI documentation in your browser by navigating to:
+
+```
+http://localhost:4000/doc/
+```
+
+For more information about OpenAPI/Swagger, visit [Swagger's official site](https://swagger.io/).
+
+## Running in Development Mode
+
+To start the application in watch mode:
+
+```bash
+npm run start:dev
+```
+
+To start the application in debug mode:
+
+```bash
+npm run start:debug
+```
+
+To start the application in production mode:
+
+```bash
+npm run start:prod
+```
 
 ## Testing
 
-After application running open new terminal and enter:
+To run tests, ensure the application is running, open a new terminal, and execute:
 
-To run all tests without authorization
+- **Run all tests without authorization:**
 
-```
-npm run test
-```
+  ```bash
+  npm run test
+  ```
 
-To run only one of all test suites
+- **Run specific test suite without authorization:**
 
-```
-npm run test -- <path to suite>
-```
+  ```bash
+  npm run test -- <path-to-suite>
+  ```
 
-To run all test with authorization
+- **Run all tests with authorization:**
 
-```
-npm run test:auth
-```
+  ```bash
+  npm run test:auth
+  ```
 
-To run only specific test suite with authorization
+- **Run a specific test suite with authorization:**
 
-```
-npm run test:auth -- <path to suite>
-```
+  ```bash
+  npm run test:auth -- <path-to-suite>
+  ```
 
-### Auto-fix and format
+- **Run tests in watch mode:**
 
-```
-npm run lint
-```
+  ```bash
+  npm run test:watch
+  ```
 
-```
-npm run format
-```
+- **Run tests with coverage report:**
+  ```bash
+  npm run test:cov
+  ```
 
-### Debugging in VSCode
+## Debugging in VSCode
 
-Press <kbd>F5</kbd> to debug.
+To debug the application in Visual Studio Code:
 
-For more information, visit: https://code.visualstudio.com/docs/editor/debugging
+1. Press <kbd>F5</kbd> to start debugging.
+2. Ensure you have a proper `launch.json` configuration for Node.js in your `.vscode` folder.
+
+For more details, visit: [VSCode Debugging Documentation](https://code.visualstudio.com/docs/editor/debugging).
+
+## Formatting and Linting
+
+- **Lint and fix issues:**
+
+  ```bash
+  npm run lint
+  ```
+
+- **Format code:**
+  ```bash
+  npm run format
+  ```
 
 ## Docker
 
-In order to run docker container in watch mode run the following command:
+You can run the application using Docker for easier setup and environment consistency.
 
-```
-npm docker:watch
-```
+- **Start Docker containers in watch mode:**
 
-Docker container could be rebuilt this command:
+  ```bash
+  npm run docker:watch
+  ```
 
-```
-npm docker:rebuilt
-```
+- **Rebuild Docker containers:**
+
+  ```bash
+  npm run docker:rebuild
+  ```
+
+- **Stop Docker containers:**
+
+  ```bash
+  npm run docker:down
+  ```
+
+- **Scan Docker containers for vulnerabilities (requires Docker Scout):**
+  ```bash
+  npm run docker:scan
+  ```
 
 ## Prisma
 
-In order to apply new schema with database use command:
+The application uses Prisma as an ORM. To apply the schema to the database:
 
-```
-npx prisma migrate dev,
-```
-
-## Swagger
-
-Documentation for app available on link http://localhost:4000/docs/.
-Convince that you run app previously.
-
-## Testing
-
-After application running open new terminal and enter:
-
-```
-npm run test
+```bash
+npm run migrate
 ```
 
-To run all tests without authorization
+## Swagger/OpenAPI Documentation
 
-### Auto-fix and format
-
-```
-npm run lint
-```
+API documentation is available at:
 
 ```
-npm run format
+http://localhost:4000/doc/
 ```
 
-### Scan Docker containers
+Ensure the application is running before accessing this link.
 
-You can also run a report on scanning Docker images for vulnerabilities using the docker scout tool.
+## Contribution Guidelines
 
-```aiignore
-npm docker:scan
-<!-- ------------------------------------------------------------------ -->
+1. Fork the repository.
+2. Create a new feature branch:
+   ```bash
+   git checkout -b feature/your-feature-name
+   ```
+3. Commit your changes:
+   ```bash
+   git commit -m "Description of your changes"
+   ```
+4. Push the branch:
+   ```bash
+   git push origin feature/your-feature-name
+   ```
+5. Open a pull request.
 
-### Prisma migration
+## License
 
-**_For migration prisma usage entrypoint.sh script._**
-
-#### Description:
-
-This script is used to wait for a PostgreSQL database to become available, run migrations, and then start the application. The script is typically used as an entry point for a Docker container running a Node.js application.
-
-#### Steps performed by the script:
-
-Wait for PostgreSQL to be ready:
-
-The script waits until the PostgreSQL database, identified by the environment variables POSTGRES_DB (host) and POSTGRES_PORT (port), is ready to accept connections.
-The script uses the nc (Netcat) command with the -z option to check the availability of the specified port on the host.
-
-#### Run database migrations:
-
-Once the database is ready, it runs the migration process using npm run migrate dev. This ensures that the database schema is up-to-date before starting the application.
-
-#### Start the application:
-
-After migrations are completed successfully, the script starts the Node.js application using npm run start:dev.
-<!-- ------------------------------------------------------------------ -->
-```
+This project is licensed under the MIT License. See the LICENSE file for details.

@@ -1,4 +1,4 @@
-FROM node:22-alpine3.20 AS build
+FROM node:22-alpine3.20 AS base
 
 WORKDIR /app
 
@@ -8,6 +8,12 @@ RUN npm ci
 COPY . .
 
 COPY prisma ./prisma/
+
+FROM node:22-alpine3.20 AS prod
+
+WORKDIR /app
+
+COPY --from=base /app /app
 
 EXPOSE $PORT
 

@@ -22,8 +22,6 @@ services:
       - .env
     environment:
       - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}?schema=public
-    # volumes:
-    #   - ./src:/app/src
     develop:
       watch:
         - action: sync
@@ -33,6 +31,8 @@ services:
             - node_modules/
         - action: rebuild
           path: package.json
+    # volumes:
+    #   - ./src:/app/src
     networks:
       - custom-network
 

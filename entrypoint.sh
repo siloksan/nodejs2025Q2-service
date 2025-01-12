@@ -18,5 +18,3 @@ npx prisma migrate dev
 
 echo "Starting the app..."
 npm run start:dev
-
-

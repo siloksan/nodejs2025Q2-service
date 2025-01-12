@@ -6,3 +6,12 @@ docker-compose.yml
 *.log
 .editorconfig
 .env
+coverage
+test
+*.test.ts
+*.spec.ts
+# -------------
+/dist
+/node_modules
+/.git
+/test

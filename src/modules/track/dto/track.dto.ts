@@ -1,3 +1,4 @@
+import { PartialType } from '@nestjs/mapped-types';
 import {
   IsInt,
   IsNotEmpty,
@@ -24,3 +25,5 @@ export class TrackDto {
   @IsInt()
   duration: number; //integer number
 }
+
+export class UpdateAlbumDto extends PartialType(TrackDto) {}

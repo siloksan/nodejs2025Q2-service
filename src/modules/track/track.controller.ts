@@ -19,58 +19,58 @@ export class TrackController {
   constructor(private readonly trackService: TrackService) {}
 
   @Post()
-  create(@Body() trackDto: TrackDto) {
-    return this.trackService.create(trackDto);
+  async create(@Body() trackDto: TrackDto) {
+    return await this.trackService.create(trackDto);
   }
 
   @Get()
-  findAll() {
-    return this.trackService.findAll();
+  async findAll() {
+    return await this.trackService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id', new ParseUUIDPipe()) id: string) {
-    const result = this.trackService.findOne(id);
+  async findOne(@Param('id', new ParseUUIDPipe()) id: string) {
+    return await this.trackService.findOne(id);
 
-    if ('status' in result) {
-      throw new HttpException(
-        ERROR_MESSAGE[result.status]('Track', id),
-        result.status,
-      );
-    }
+    // if ('status' in result) {
+    //   throw new HttpException(
+    //     ERROR_MESSAGE[result.status]('Track', id),
+    //     result.status,
+    //   );
+    // }
 
-    return result;
+    // return result;
   }
 
   @Put(':id')
-  update(
+  async update(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() trackDto: TrackDto,
   ) {
-    const result = this.trackService.update(id, trackDto);
+    return await this.trackService.update(id, trackDto);
 
-    if ('status' in result) {
-      throw new HttpException(
-        ERROR_MESSAGE[result.status]('Track', id),
-        result.status,
-      );
-    }
+    // if ('status' in result) {
+    //   throw new HttpException(
+    //     ERROR_MESSAGE[result.status]('Track', id),
+    //     result.status,
+    //   );
+    // }
 
-    return result;
+    // return result;
   }
 
   @Delete(':id')
   @HttpCode(CODE_STATUS.NO_CONTENT)
-  remove(@Param('id', new ParseUUIDPipe()) id: string) {
-    const result = this.trackService.remove(id);
+  async remove(@Param('id', new ParseUUIDPipe()) id: string) {
+    return await this.trackService.remove(id);
 
-    if (!result) return;
+    // if (!result) return;
 
-    if ('status' in result) {
-      throw new HttpException(
-        ERROR_MESSAGE[result.status]('Track', id),
-        result.status,
-      );
-    }
+    // if ('status' in result) {
+    //   throw new HttpException(
+    //     ERROR_MESSAGE[result.status]('Track', id),
+    //     result.status,
+    //   );
+    // }
   }
 }

@@ -1,5 +1,4 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
-import { DataBase } from 'src/database/in-memory-db/database.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-password.dto';
 import { UserEntity } from './entities/user.entity';
@@ -11,13 +10,7 @@ import { HttpException } from '@nestjs/common/exceptions';
 
 @Injectable()
 export class UsersService {
-  private readonly users: Map<string, UserEntity>;
-  constructor(
-    private readonly db: DataBase,
-    private readonly prisma: PrismaService,
-  ) {
-    this.users = db.users;
-  }
+  constructor(private readonly prisma: PrismaService) {}
   async create(createUserDto: CreateUserDto) {
     // [SelfReview]: It's better create separate helper for this logic
     const timestamp = convertMsToTimeStamp(Date.now());

@@ -1,69 +1,67 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { TrackDto } from './dto/track.dto';
 import { TrackEntity } from './entities/track.entity';
-import { v4 as uuidv4 } from 'uuid';
-import { DataBase } from 'src/database/in-memory-db/database.service';
-import { CODE_STATUS } from 'src/common/constants';
-import { ENTITIES_NAME } from 'src/common/constants/entities-name';
+import { ERROR_MESSAGE } from 'src/common/constants';
+import { PrismaService } from 'src/database/prisma-module/prisma.service';
 
 @Injectable()
 export class TrackService {
-  private readonly tracks: Map<string, TrackEntity>;
-  constructor(private readonly db: DataBase) {
-    this.tracks = db.tracks;
-  }
+  constructor(private readonly prisma: PrismaService) {}
 
-  create(trackDto: TrackDto) {
-    const id = uuidv4();
-    const newTrack: TrackEntity = {
-      id,
+  async create(trackDto: TrackDto) {
+    const track = {
       name: trackDto.name,
       albumId: trackDto.albumId || null,
       artistId: trackDto.artistId || null,
       duration: trackDto.duration,
     };
 
-    this.tracks.set(id, newTrack);
+    const newTrack = await this.prisma.track.create({ data: track });
 
     return new TrackEntity(newTrack);
   }
 
-  findAll() {
-    return Array.from(this.tracks.values()).map(
-      (track) => new TrackEntity(track),
-    );
+  async findAll() {
+    return await this.prisma.track.findMany();
   }
 
-  findOne(id: string) {
-    const track = this.tracks.get(id);
+  async findOne(id: string) {
+    const track = await this.prisma.track.findUnique({ where: { id } });
 
     if (!track) {
-      return { status: CODE_STATUS.NOT_FOUND };
+      throw new HttpException(
+        ERROR_MESSAGE[HttpStatus.NOT_FOUND]('Track', id),
+        HttpStatus.NOT_FOUND,
+      );
     }
 
     return new TrackEntity(track);
   }
 
-  update(id: string, trackDto: TrackDto) {
-    const track = this.tracks.get(id);
+  async update(id: string, trackDto: TrackDto) {
+    try {
+      const updatedTrack = await this.prisma.track.update({
+        where: { id },
+        data: trackDto,
+      });
 
-    if (!track) {
-      return { status: CODE_STATUS.NOT_FOUND };
+      return new TrackEntity(updatedTrack);
+    } catch (error) {
+      throw new HttpException(
+        ERROR_MESSAGE[HttpStatus.NOT_FOUND]('Track', id),
+        HttpStatus.NOT_FOUND,
+      );
     }
-
-    track.name = trackDto.name;
-    track.albumId = trackDto.albumId || null;
-    track.artistId = trackDto.artistId || null;
-    track.duration = trackDto.duration;
-
-    return new TrackEntity(track);
   }
 
-  remove(id: string) {
-    if (!this.db.checkEntityExists(ENTITIES_NAME.TRACKS, id)) {
-      return { status: CODE_STATUS.NOT_FOUND };
+  async remove(id: string) {
+    try {
+      await this.prisma.track.delete({ where: { id } });
+    } catch {
+      throw new HttpException(
+        ERROR_MESSAGE[HttpStatus.NOT_FOUND]('Track', id),
+        HttpStatus.NOT_FOUND,
+      );
     }
-
-    this.db.removeEntity(ENTITIES_NAME.TRACKS, id);
   }
 }

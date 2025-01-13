@@ -6,13 +6,12 @@ import {
   Param,
   Delete,
   ParseUUIDPipe,
-  HttpException,
   Put,
   HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
 import { TrackService } from './track.service';
 import { TrackDto } from './dto/track.dto';
-import { CODE_STATUS, ERROR_MESSAGE } from 'src/common/constants';
 
 @Controller('track')
 export class TrackController {
@@ -31,15 +30,6 @@ export class TrackController {
   @Get(':id')
   async findOne(@Param('id', new ParseUUIDPipe()) id: string) {
     return await this.trackService.findOne(id);
-
-    // if ('status' in result) {
-    //   throw new HttpException(
-    //     ERROR_MESSAGE[result.status]('Track', id),
-    //     result.status,
-    //   );
-    // }
-
-    // return result;
   }
 
   @Put(':id')
@@ -48,29 +38,11 @@ export class TrackController {
     @Body() trackDto: TrackDto,
   ) {
     return await this.trackService.update(id, trackDto);
-
-    // if ('status' in result) {
-    //   throw new HttpException(
-    //     ERROR_MESSAGE[result.status]('Track', id),
-    //     result.status,
-    //   );
-    // }
-
-    // return result;
   }
 
   @Delete(':id')
-  @HttpCode(CODE_STATUS.NO_CONTENT)
+  @HttpCode(HttpStatus.NO_CONTENT)
   async remove(@Param('id', new ParseUUIDPipe()) id: string) {
     return await this.trackService.remove(id);
-
-    // if (!result) return;
-
-    // if ('status' in result) {
-    //   throw new HttpException(
-    //     ERROR_MESSAGE[result.status]('Track', id),
-    //     result.status,
-    //   );
-    // }
   }
 }

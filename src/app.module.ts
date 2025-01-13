@@ -21,6 +21,6 @@ import { PrismaModule } from './database/prisma-module/prisma.module';
   ],
   controllers: [AppController],
   providers: [AppService],
-  exports: [DataBaseModule],
+  exports: [PrismaModule],
 })
 export class AppModule {}

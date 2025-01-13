@@ -20,65 +20,31 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.create(createUserDto);
+  async create(@Body() createUserDto: CreateUserDto) {
+    return await this.usersService.create(createUserDto);
   }
 
   @Get()
-  findAll() {
-    return this.usersService.findAll();
+  async findAll() {
+    return await this.usersService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id', new ParseUUIDPipe()) id: string) {
-    const result = this.usersService.findOne(id);
-
-    if ('status' in result) {
-      throw new HttpException(
-        ERROR_MESSAGE[result.status]('User', id),
-        result.status,
-      );
-    }
-
-    return result;
+  async findOne(@Param('id', new ParseUUIDPipe()) id: string) {
+    return await this.usersService.findOne(id);
   }
 
   @Put(':id')
-  update(
+  async update(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() updateUserDto: UpdateUserDto,
   ) {
-    const result = this.usersService.update(id, updateUserDto);
-
-    if ('status' in result) {
-      if (result.status === CODE_STATUS.NOT_FOUND) {
-        throw new HttpException(
-          ERROR_MESSAGE[result.status]('User', id),
-          result.status,
-        );
-      } else if (result.status === CODE_STATUS.FORBIDDEN) {
-        throw new HttpException(
-          ERROR_MESSAGE[result.status]('old password'),
-          result.status,
-        );
-      }
-    }
-
-    return result;
+    return await this.usersService.update(id, updateUserDto);
   }
 
   @Delete(':id')
   @HttpCode(CODE_STATUS.NO_CONTENT)
-  remove(@Param('id', new ParseUUIDPipe()) id: string) {
-    const result = this.usersService.remove(id);
-
-    if (!result) return;
-
-    if ('status' in result) {
-      throw new HttpException(
-        ERROR_MESSAGE[result.status]('User', id),
-        result.status,
-      );
-    }
+  async remove(@Param('id', new ParseUUIDPipe()) id: string) {
+    await this.usersService.remove(id);
   }
 }

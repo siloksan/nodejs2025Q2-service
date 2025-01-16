@@ -16,6 +16,7 @@ services:
     depends_on:
       - postgres
     ports:
+      - ${DEBUG_PORT}:${DEBUG_PORT}
       - ${PORT}:${PORT}
     restart: on-failure
     env_file:

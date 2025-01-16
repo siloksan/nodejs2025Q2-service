@@ -17,103 +17,39 @@ export class FavoritesController {
   constructor(private readonly favoritesService: FavoritesService) {}
 
   @Get()
-  findAll() {
-    return this.favoritesService.findAll();
+  async findAll() {
+    return await this.favoritesService.findAll();
   }
 
   @Post('track/:id')
-  addTrack(@Param('id', new ParseUUIDPipe()) id: string) {
-    const result = this.favoritesService.addToFavorite(
-      ENTITIES_NAME.TRACKS,
-      id,
-    );
-
-    if (typeof result === 'string') {
-      return result;
-    }
-
-    throw new HttpException(
-      ERROR_MESSAGE[result.status]('Track', id),
-      result.status,
-    );
+  async addTrack(@Param('id', new ParseUUIDPipe()) id: string) {
+    return await this.favoritesService.addToFavorite(ENTITIES_NAME.TRACKS, id);
   }
 
   @Post('album/:id')
-  addAlbum(@Param('id', new ParseUUIDPipe()) id: string) {
-    const result = this.favoritesService.addToFavorite(
-      ENTITIES_NAME.ALBUMS,
-      id,
-    );
-
-    if (typeof result === 'string') {
-      return result;
-    }
-
-    throw new HttpException(
-      ERROR_MESSAGE[result.status]('Album', id),
-      result.status,
-    );
+  async addAlbum(@Param('id', new ParseUUIDPipe()) id: string) {
+    return await this.favoritesService.addToFavorite(ENTITIES_NAME.ALBUMS, id);
   }
 
   @Post('artist/:id')
-  addArtist(@Param('id', new ParseUUIDPipe()) id: string) {
-    const result = this.favoritesService.addToFavorite(
-      ENTITIES_NAME.ARTISTS,
-      id,
-    );
-
-    if (typeof result === 'string') {
-      return result;
-    }
-
-    throw new HttpException(
-      ERROR_MESSAGE[result.status]('Artist', id),
-      result.status,
-    );
+  async addArtist(@Param('id', new ParseUUIDPipe()) id: string) {
+    return await this.favoritesService.addToFavorite(ENTITIES_NAME.ARTISTS, id);
   }
-
   @Delete('track/:id')
   @HttpCode(CODE_STATUS.NO_CONTENT)
-  removeTrack(@Param('id', new ParseUUIDPipe()) id: string) {
-    const result = this.favoritesService.remove(ENTITIES_NAME.TRACKS, id);
-
-    if (typeof result === 'string') {
-      return result;
-    }
-
-    throw new HttpException(
-      ERROR_MESSAGE[result.status]('Artist', id),
-      result.status,
-    );
+  async removeTrack(@Param('id', new ParseUUIDPipe()) id: string) {
+    return await this.favoritesService.remove(ENTITIES_NAME.TRACKS, id);
   }
 
   @Delete('album/:id')
   @HttpCode(CODE_STATUS.NO_CONTENT)
-  removeAlbum(@Param('id', new ParseUUIDPipe()) id: string) {
-    const result = this.favoritesService.remove(ENTITIES_NAME.ALBUMS, id);
-
-    if (typeof result === 'string') {
-      return result;
-    }
-
-    throw new HttpException(
-      ERROR_MESSAGE[result.status]('Album', id),
-      result.status,
-    );
+  async removeAlbum(@Param('id', new ParseUUIDPipe()) id: string) {
+    return await this.favoritesService.remove(ENTITIES_NAME.ALBUMS, id);
   }
 
   @Delete('artist/:id')
   @HttpCode(CODE_STATUS.NO_CONTENT)
-  removeArtist(@Param('id', new ParseUUIDPipe()) id: string) {
-    const result = this.favoritesService.remove(ENTITIES_NAME.ARTISTS, id);
-
-    if (typeof result === 'string') {
-      return result;
-    }
-
-    throw new HttpException(
-      ERROR_MESSAGE[result.status]('Artist', id),
-      result.status,
-    );
+  async removeArtist(@Param('id', new ParseUUIDPipe()) id: string) {
+    return await this.favoritesService.remove(ENTITIES_NAME.ARTISTS, id);
   }
 }

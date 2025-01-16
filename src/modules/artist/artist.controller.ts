@@ -30,7 +30,7 @@ export class ArtistController {
 
   @Get(':id')
   async findOne(@Param('id', new ParseUUIDPipe()) id: string) {
-    await this.artistService.findOne(id);
+    return await this.artistService.findOne(id);
   }
 
   @Put(':id')
@@ -38,7 +38,7 @@ export class ArtistController {
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() updateArtistDto: UpdateArtistDto,
   ) {
-    await this.artistService.update(id, updateArtistDto);
+    return await this.artistService.update(id, updateArtistDto);
   }
 
   @Delete(':id')

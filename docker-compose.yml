@@ -32,8 +32,8 @@ services:
             - node_modules/
         - action: rebuild
           path: package.json
-    # volumes:
-    #   - ./src:/app/src
+    volumes:
+      - ./logs:/app/logs
     networks:
       - custom-network
 

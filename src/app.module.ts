@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './modules/users/users.module';
@@ -8,9 +8,12 @@ import { AlbumModule } from './modules/album/album.module';
 import { FavoritesModule } from './modules/favorites/favorites.module';
 import { DataBaseModule } from './database/in-memory-db/database.module';
 import { PrismaModule } from './database/prisma-module/prisma.module';
+import { CustomLoggerModule } from './common/loggers/logger.module';
+import { LoggerMiddleware } from './common/loggers/logger.middleware';
 
 @Module({
   imports: [
+    CustomLoggerModule,
     UsersModule,
     ArtistModule,
     TrackModule,
@@ -21,6 +24,10 @@ import { PrismaModule } from './database/prisma-module/prisma.module';
   ],
   controllers: [AppController],
   providers: [AppService],
-  exports: [PrismaModule],
+  exports: [PrismaModule, CustomLoggerModule],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(LoggerMiddleware).forRoutes('*');
+  }
+}

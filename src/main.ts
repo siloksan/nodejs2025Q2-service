@@ -7,11 +7,15 @@ import {
   ClassSerializerInterceptor,
   ValidationPipe,
 } from '@nestjs/common';
-import { logger } from './common/loggers';
+import { CustomLogger } from './common/loggers/logger.service';
 
 async function bootstrap() {
   const PORT = process.env.PORT || 4000;
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    bufferLogs: true,
+  });
+
+  app.useLogger(app.get(CustomLogger));
 
   AppSwaggerModule.setup(app);
   app.useGlobalPipes(
@@ -24,7 +28,6 @@ async function bootstrap() {
     }),
   );
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
-  app.use(logger);
 
   await app.listen(PORT);
 

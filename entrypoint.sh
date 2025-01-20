@@ -6,4 +6,4 @@ echo "Running migrations..."
 npx prisma migrate dev
 
 echo "Starting the app..."
-npm run start:dev
+npm run start:debug

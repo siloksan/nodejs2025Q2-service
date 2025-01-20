@@ -1,15 +1,20 @@
 import { Injectable } from '@nestjs/common';
 import { LoggerValue, LOGGER_LEVELS } from './logger.const';
-import { resolve } from 'node:path';
-import { createFolder, getLogFilePath, writeToFile } from './logger.helpers';
-import { LoggerService } from '@nestjs/common/services';
+import { join, resolve } from 'node:path';
+import {
+  checkFileExist,
+  createFile,
+  createFolder,
+  rotateLogFile,
+  writeToFile,
+} from './logger.helpers';
+import { ConsoleLogger } from '@nestjs/common/services';
 
 @Injectable()
-export class CustomLogger implements LoggerService {
+export class CustomLogger extends ConsoleLogger {
   private readonly levels = Object.values(LOGGER_LEVELS);
   private readonly currentLevel = (process.env.LOG_LEVEL ||
     LOGGER_LEVELS.LOG) as LoggerValue;
-  private readonly lastLogFiles: Map<LoggerValue, string> = new Map();
   private readonly maxSizeLogFile = Number(process.env.LOG_LEVEL) || 1000;
   private readonly logsDir = resolve(process.cwd(), 'logs');
 
@@ -21,16 +26,15 @@ export class CustomLogger implements LoggerService {
   }
 
   private async logToFile(level: LoggerValue, message: string) {
-    await createFolder(this.logsDir, level);
+    const filePath = join(this.logsDir, `${level}.log`);
 
-    const logFilePath = await getLogFilePath(
-      this.lastLogFiles,
-      level,
-      this.maxSizeLogFile,
-      this.logsDir,
-    );
+    createFolder(this.logsDir, level);
 
-    writeToFile(message, logFilePath);
+    if (!checkFileExist(filePath)) createFile(filePath);
+
+    rotateLogFile(level, filePath, this.maxSizeLogFile);
+
+    writeToFile(message, filePath);
   }
 
   private editMessage(message: string, level: LoggerValue) {
@@ -50,27 +54,31 @@ export class CustomLogger implements LoggerService {
   }
 
   public log(message: string) {
-    this.logMessage(message, LOGGER_LEVELS.LOG, console.log);
+    this.logMessage(message, LOGGER_LEVELS.LOG, console.log.bind(console));
   }
 
   public fatal(message: string) {
-    this.logMessage(message, LOGGER_LEVELS.FATAL, console.error);
+    this.logMessage(message, LOGGER_LEVELS.FATAL, console.error.bind(console));
   }
 
   error(message: string, trace: string) {
     const errorMessage = `${message}\n${trace}`;
-    this.logMessage(errorMessage, LOGGER_LEVELS.ERROR, console.error);
+    this.logMessage(
+      errorMessage,
+      LOGGER_LEVELS.ERROR,
+      console.error.bind(console),
+    );
   }
 
   warn(message: string) {
-    this.logMessage(message, LOGGER_LEVELS.WARN, console.warn);
+    this.logMessage(message, LOGGER_LEVELS.WARN, console.warn.bind(console));
   }
 
   debug(message: string) {
-    this.logMessage(message, LOGGER_LEVELS.DEBUG, console.debug);
+    this.logMessage(message, LOGGER_LEVELS.DEBUG, console.debug.bind(console));
   }
 
   verbose(message: string) {
-    this.logMessage(message, LOGGER_LEVELS.DEBUG, console.log);
+    this.logMessage(message, LOGGER_LEVELS.DEBUG, console.log.bind(console));
   }
 }

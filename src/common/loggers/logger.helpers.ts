@@ -1,52 +1,48 @@
-import { createWriteStream, promises as fs } from 'node:fs';
+import {
+  mkdirSync,
+  renameSync,
+  statSync,
+  appendFileSync,
+  existsSync,
+  writeFileSync,
+} from 'node:fs';
 import { join } from 'node:path';
-import { LoggerValue } from './logger.const';
 
-export async function createFolder(path: string, dirName: string) {
+export function createFolder(path: string, dirName: string) {
   const levelDir = join(path, dirName);
 
-  try {
-    await fs.mkdir(levelDir, { recursive: true });
-  } catch (error) {
-    console.error(`Error creating directory with path: ${levelDir}: `, error);
-  }
+  mkdirSync(levelDir, { recursive: true });
 }
 
-export async function getLogFilePath(
-  logFilesMap: Map<LoggerValue, string>,
-  level: LoggerValue,
-  maxFileSize: number,
-  loggingDirectory: string,
-) {
-  const logFilePath = logFilesMap.get(level);
-  const amountBytesInKB = 1024;
+export function checkFileExist(filePath: string) {
+  return existsSync(filePath);
+}
 
-  if (logFilePath) {
-    try {
-      const stats = await fs.stat(logFilePath);
-      if (stats.size < maxFileSize * amountBytesInKB) {
-        return logFilePath;
-      }
-    } catch {}
-  }
-
-  const newFile = join(loggingDirectory, level, `${Date.now()}.log`);
-  logFilesMap.set(level, newFile);
-  return newFile;
+export function createFile(filePath: string) {
+  writeFileSync(filePath, '', 'utf8');
 }
 
 export function writeToFile(message: string, path: string) {
-  const writeStream = createWriteStream(path, { flags: 'a' });
+  appendFileSync(path, `${message}\n`, 'utf8');
+}
 
-  writeStream.on('error', (error) => {
-    console.error('Error creating file.', error);
-  });
+function checkFileSize(filePath: string, maxFileSize: number) {
+  const amountBytesInKB = 1024;
+  const stats = statSync(filePath);
 
-  writeStream.write(`${message}\n`, 'utf8', (err) => {
-    if (err) {
-      console.error('Error writing to file:', err);
-    }
-  });
+  return stats.size < maxFileSize * amountBytesInKB;
+}
 
-  writeStream.end();
+export async function rotateLogFile(
+  level: string,
+  filePath: string,
+  maxFileSize: number,
+) {
+  if (checkFileSize(filePath, maxFileSize)) {
+    return;
+  }
+
+  const newName = `${Date.now()}-${level}.log`;
+
+  renameSync(filePath, newName);
 }

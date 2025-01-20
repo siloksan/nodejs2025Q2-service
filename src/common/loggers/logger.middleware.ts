@@ -9,7 +9,6 @@ export class LoggerMiddleware implements NestMiddleware {
 
   use(req: Request, res: Response, next: NextFunction) {
     const { method, url } = req;
-    const timestamp = new Date().toISOString();
     const start = Date.now();
 
     finished(res, () => {
@@ -18,7 +17,7 @@ export class LoggerMiddleware implements NestMiddleware {
       const responseTime = Date.now() - start;
 
       this.logger.log(
-        `[${timestamp}] [method]:${method} [url]: ${url} [status]: ${statusCode} [content-length]: ${contentLength} [response-time]: ${responseTime} ms`,
+        `[method]:${method} [url]: ${url} [status]: ${statusCode} [content-length]: ${contentLength} [response-time]: ${responseTime} ms`,
       );
       this.logger.debug(`Headers: ${JSON.stringify(req.headers)}`);
       this.logger.debug(`Query: ${JSON.stringify(req.query)}`);

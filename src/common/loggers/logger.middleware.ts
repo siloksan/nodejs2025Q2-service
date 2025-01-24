@@ -8,22 +8,36 @@ export class LoggerMiddleware implements NestMiddleware {
   constructor(private readonly logger: CustomLogger) {}
 
   use(req: Request, res: Response, next: NextFunction) {
-    const { method, url } = req;
     const start = Date.now();
 
     finished(res, () => {
-      const { statusCode } = res;
-      const contentLength = res.get('content-length');
       const responseTime = Date.now() - start;
 
-      this.logger.log(
-        `[method]:${method} [url]: ${url} [status]: ${statusCode} [content-length]: ${contentLength} [response-time]: ${responseTime} ms`,
-      );
-      this.logger.debug(`Headers: ${JSON.stringify(req.headers)}`);
-      this.logger.debug(`Query: ${JSON.stringify(req.query)}`);
-      this.logger.debug(`Body: ${JSON.stringify(req.body)}`);
+      this.logRequestMessage(req, responseTime);
+      this.logResponseMessage(res);
     });
 
     next();
+  }
+
+  private logRequestMessage(req: Request, responseTime: number) {
+    const { method, url, query, body, headers } = req;
+    const headersMsg = `Headers: ${JSON.stringify(headers)}`;
+    const queryMsg = `Query: ${JSON.stringify(query)}`;
+    const bodyMsg = `Body: ${JSON.stringify(body)}`;
+    const requestMsg = `[Request]: [method]:${method} [url]: ${url} [response-time]: ${responseTime} ms`;
+    const debugMessage = `${requestMsg}\n${headersMsg}\n${queryMsg}\n${bodyMsg}`;
+
+    this.logger.log(requestMsg);
+    this.logger.debug(debugMessage);
+  }
+
+  private logResponseMessage(res: Response) {
+    const { statusCode } = res;
+    const contentLength = res.get('content-length');
+
+    this.logger.log(
+      `[Response]: [status]: ${statusCode} [content-length]: ${contentLength}`,
+    );
   }
 }

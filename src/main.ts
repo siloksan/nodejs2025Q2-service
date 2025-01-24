@@ -8,6 +8,12 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { CustomLogger } from './common/loggers/logger.service';
+import {
+  logUncaughtException,
+  logUnhandledRejection,
+} from './common/loggers/logger.helpers';
+import { AuthGuard } from './modules/auth/auth.guard';
+import { JwtService } from '@nestjs/jwt';
 
 async function bootstrap() {
   const PORT = process.env.PORT || 4000;
@@ -15,14 +21,20 @@ async function bootstrap() {
     bufferLogs: true,
   });
 
-  app.useLogger(app.get(CustomLogger));
+  const logger = app.get(CustomLogger);
+  app.useLogger(logger);
+
+  const reflector = app.get(Reflector);
+  const jwtService = app.get(JwtService);
+
+  app.useGlobalGuards(new AuthGuard(jwtService, reflector));
 
   AppSwaggerModule.setup(app);
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
       exceptionFactory: (errors) => {
-        console.error('Validation Errors:', errors);
+        logger.error('Validation Errors:', errors);
         return new BadRequestException(errors);
       },
     }),
@@ -31,10 +43,14 @@ async function bootstrap() {
 
   await app.listen(PORT);
 
-  console.log(
+  logger.log(
     `Swagger is available at: http://localhost:${PORT}/${SWAGGER_PATH}`,
   );
-  console.log(`Server is running at: http://localhost:${PORT}`);
+
+  logger.log(`Server is running at: http://localhost:${PORT}`);
+
+  logUncaughtException(logger);
+  logUnhandledRejection(logger);
 }
 
 bootstrap();

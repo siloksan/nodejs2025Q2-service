@@ -1,3 +1,4 @@
+import { LoggerService } from '@nestjs/common';
 import {
   mkdirSync,
   renameSync,
@@ -45,4 +46,16 @@ export async function rotateLogFile(
   const newName = `${Date.now()}-${level}.log`;
 
   renameSync(filePath, newName);
+}
+
+export function logUncaughtException(logger: LoggerService) {
+  process.on('uncaughtException', (error) => {
+    logger.error('Uncaught Exception', error.message);
+  });
+}
+
+export function logUnhandledRejection(logger: LoggerService) {
+  process.on('unhandledRejection', (reason) => {
+    logger.error('Unhandled Rejection', reason);
+  });
 }

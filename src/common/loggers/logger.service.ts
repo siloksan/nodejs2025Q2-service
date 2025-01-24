@@ -22,11 +22,11 @@ export class CustomLogger extends ConsoleLogger {
     const currentLevelIndex = this.levels.indexOf(this.currentLevel);
     const levelIndex = this.levels.indexOf(level);
 
-    return levelIndex >= currentLevelIndex;
+    return levelIndex <= currentLevelIndex;
   }
 
   private async logToFile(level: LoggerValue, message: string) {
-    const filePath = join(this.logsDir, `${level}.log`);
+    const filePath = join(this.logsDir, level, `${level}.log`);
 
     createFolder(this.logsDir, level);
 
@@ -37,48 +37,78 @@ export class CustomLogger extends ConsoleLogger {
     writeToFile(message, filePath);
   }
 
-  private editMessage(message: string, level: LoggerValue) {
-    return `[${level.toLocaleUpperCase()}]: [${new Date().toISOString()}] ${message}`;
+  private editMessage(
+    level: LoggerValue,
+    message: string,
+    ...optionalParams: any[]
+  ) {
+    return `[${level.toLocaleUpperCase()}]: [${new Date().toISOString()}] ${message} ${optionalParams}`;
   }
 
   private logMessage(
-    message: string,
     level: LoggerValue,
+    message: string,
     consoleLogger: (msg: string) => void,
+    ...optionalParams: any[]
   ) {
     if (this.shouldLog(level)) {
-      const convertedMessage = this.editMessage(message, level);
+      const convertedMessage = this.editMessage(level, message, optionalParams);
       consoleLogger(convertedMessage);
       this.logToFile(level, convertedMessage);
     }
   }
 
-  public log(message: string) {
-    this.logMessage(message, LOGGER_LEVELS.LOG, console.log.bind(console));
-  }
-
-  public fatal(message: string) {
-    this.logMessage(message, LOGGER_LEVELS.FATAL, console.error.bind(console));
-  }
-
-  error(message: string, trace: string) {
-    const errorMessage = `${message}\n${trace}`;
+  public log(message: string, ...optionalParams: any[]) {
     this.logMessage(
-      errorMessage,
-      LOGGER_LEVELS.ERROR,
-      console.error.bind(console),
+      LOGGER_LEVELS.LOG,
+      message,
+      console.log.bind(console),
+      optionalParams,
     );
   }
 
-  warn(message: string) {
-    this.logMessage(message, LOGGER_LEVELS.WARN, console.warn.bind(console));
+  public fatal(message: string, ...optionalParams: any[]) {
+    this.logMessage(
+      LOGGER_LEVELS.FATAL,
+      message,
+      console.error.bind(console),
+      optionalParams,
+    );
   }
 
-  debug(message: string) {
-    this.logMessage(message, LOGGER_LEVELS.DEBUG, console.debug.bind(console));
+  error(message: string, ...optionalParams: any[]) {
+    this.logMessage(
+      LOGGER_LEVELS.ERROR,
+      message,
+      console.error.bind(console),
+      optionalParams,
+    );
   }
 
-  verbose(message: string) {
-    this.logMessage(message, LOGGER_LEVELS.DEBUG, console.log.bind(console));
+  warn(message: string, ...optionalParams: any[]) {
+    this.logMessage(
+      LOGGER_LEVELS.WARN,
+      message,
+      console.warn.bind(console),
+      optionalParams,
+    );
+  }
+
+  debug(message: string, ...optionalParams: any[]) {
+    this.logMessage(
+      LOGGER_LEVELS.DEBUG,
+      message,
+      console.debug.bind(console),
+      optionalParams,
+    );
+  }
+
+  verbose(message: string, ...optionalParams: any[]) {
+    this.logMessage(
+      LOGGER_LEVELS.DEBUG,
+      message,
+      console.log.bind(console),
+      optionalParams,
+    );
   }
 }

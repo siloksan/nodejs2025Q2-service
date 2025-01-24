@@ -35,13 +35,28 @@ export class FavoritesService {
   }
 
   async findAll() {
-    const favorites = await this.prisma.favorites.findFirst({
+    let favorites = await this.prisma.favorites.findFirst({
       include: {
         albums: true,
         artists: true,
         tracks: true,
       },
     });
+
+    if (!favorites) {
+      favorites = await this.prisma.favorites.create({
+        data: {
+          artists: { create: [] },
+          albums: { create: [] },
+          tracks: { create: [] },
+        },
+        include: {
+          albums: true,
+          artists: true,
+          tracks: true,
+        },
+      });
+    }
 
     return favorites;
   }

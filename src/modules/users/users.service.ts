@@ -5,7 +5,6 @@ import { UserEntity } from './entities/user.entity';
 import { CODE_STATUS, ERROR_MESSAGE } from 'src/common/constants/http-errors';
 import { PrismaService } from 'src/database/prisma-module/prisma.service';
 import { convertMsToTimeStamp } from 'src/common/helpers/time-mappers';
-import { USER_ERROR_MESSAGE } from './constant/error-message.constant';
 import { HttpException } from '@nestjs/common/exceptions';
 import { compare, genSalt, hash } from 'bcrypt';
 import { Prisma } from '@prisma/client';

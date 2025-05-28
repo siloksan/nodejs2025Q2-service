@@ -8,7 +8,19 @@
 ## Downloading
 
 ```
-git clone {repository URL}
+git clone git@github.com:siloksan/nodejs2025Q2-service.git
+```
+
+## Checkout on the task branch
+
+```
+git checkout <task-name>
+```
+
+## Rename .env.example to .env
+
+```
+.env.example >>> .env
 ```
 
 ## Installing NPM modules

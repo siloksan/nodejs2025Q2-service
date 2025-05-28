@@ -17,6 +17,12 @@ git clone git@github.com:siloksan/nodejs2025Q2-service.git
 git checkout <task-name>
 ```
 
+## Rename .env.example to .env
+
+```
+.env.example >>> .env
+```
+
 ## Installing NPM modules
 
 ```

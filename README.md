@@ -12,9 +12,14 @@ Before starting, ensure you have the following installed on your system:
 
 Clone the repository to your local machine:
 
-```bash
-git clone <repository URL>
-cd <repository-folder>
+```
+git clone git@github.com:siloksan/nodejs2025Q2-service.git
+```
+
+## Checkout on the task branch
+
+```
+git checkout <task-name>
 ```
 
 ## Installing Dependencies

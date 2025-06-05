@@ -5,9 +5,12 @@ docker-compose.yml
 .env
 *.test.ts
 *.spec.ts
+README.md
 # -------------
 /dist
 /node_modules
 /.git
 /test
 /coverage
+/.vscode
+/.husky

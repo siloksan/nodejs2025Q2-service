@@ -1,6 +1,7 @@
 services:
   postgres:
-    build: ./database
+    image: siloksan/node2025q2-postgres
+    # build: ./database
     ports:
       - ${POSTGRES_PORT}:5432
     restart: always
@@ -12,7 +13,8 @@ services:
       - custom-network
 
   app:
-    build: .
+    image: siloksan/node2025q2-app
+    # build: .
     depends_on:
       - postgres
     ports:
@@ -25,15 +27,13 @@ services:
       - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}?schema=public
     develop:
       watch:
-        - action: sync
+        - action: rebuild
           path: ./src
           target: /app/src
           ignore:
             - node_modules/
         - action: rebuild
           path: package.json
-    # volumes:
-    #   - ./src:/app/src
     networks:
       - custom-network
 

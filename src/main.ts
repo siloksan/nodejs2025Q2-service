@@ -25,7 +25,6 @@ async function bootstrap() {
   );
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
   app.use(logger);
-
   await app.listen(PORT);
 
   console.log(

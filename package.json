@@ -23,10 +23,11 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "docker:up": "docker compose up",
-    "docker:rebuild": "docker compose down && docker compose build",
     "docker:watch": "docker compose up --watch",
-    "docker:down": "docker compose down"
+    "docker:prod": "docker compose up",
+    "docker:rebuild": "docker compose down && docker compose build",
+    "docker:down": "docker compose down",
+    "docker:scan": "---"
   },
   "dependencies": {
     "@nestjs/common": "^8.0.0",

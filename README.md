@@ -19,7 +19,7 @@ git clone git@github.com:siloksan/nodejs2025Q2-service.git
 ## Checkout on the task branch
 
 ```
-git checkout <task-name>
+git checkout docker-postgres
 ```
 
 ## Installing Dependencies
@@ -171,23 +171,6 @@ http://localhost:4000/doc/
 ```
 
 Ensure the application is running before accessing this link.
-
-## Contribution Guidelines
-
-1. Fork the repository.
-2. Create a new feature branch:
-   ```bash
-   git checkout -b feature/your-feature-name
-   ```
-3. Commit your changes:
-   ```bash
-   git commit -m "Description of your changes"
-   ```
-4. Push the branch:
-   ```bash
-   git push origin feature/your-feature-name
-   ```
-5. Open a pull request.
 
 ## License
 

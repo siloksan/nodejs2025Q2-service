@@ -27,7 +27,7 @@
     "docker:prod": "docker compose up",
     "docker:rebuild": "docker compose down && docker compose build",
     "docker:down": "docker compose down",
-    "docker:scan": "---"
+    "docker:scan": "docker scout cves siloksan/node2025q2-app:latest && docker scout cves siloksan/node2025q2-postgres:latest"
   },
   "dependencies": {
     "@nestjs/common": "^8.0.0",

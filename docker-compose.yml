@@ -9,6 +9,7 @@ services:
       - .env
     volumes:
       - postgres-data:/var/lib/postgresql/data
+      - postgres_logs:/var/lib/postgresql
     networks:
       - custom-network
 
@@ -39,6 +40,7 @@ services:
 
 volumes:
   postgres-data:
+  postgres_logs:
 
 networks:
   custom-network:

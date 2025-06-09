@@ -1,0 +1,47 @@
+services:
+  postgres:
+    image: siloksan/node2025q2-postgres
+    # build: ./database
+    ports:
+      - ${POSTGRES_PORT}:5432
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - postgres_logs:/var/lib/postgresql
+    networks:
+      - custom-network
+
+  app:
+    image: siloksan/node2025q2-app
+    # build: .
+    depends_on:
+      - postgres
+    ports:
+      - ${DEBUG_PORT}:${DEBUG_PORT}
+      - ${PORT}:${PORT}
+    restart: on-failure
+    env_file:
+      - .env
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}?schema=public
+    develop:
+      watch:
+        - action: rebuild
+          path: ./src
+          target: /app/src
+          ignore:
+            - node_modules/
+        - action: rebuild
+          path: package.json
+    networks:
+      - custom-network
+
+volumes:
+  postgres-data:
+  postgres_logs:
+
+networks:
+  custom-network:
+    driver: bridge

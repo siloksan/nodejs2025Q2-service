@@ -47,7 +47,6 @@ async function bootstrap() {
   );
 
   logger.log(`Server is running at: http://localhost:${PORT}`);
-
   logUncaughtException(logger);
   logUnhandledRejection(logger);
 }

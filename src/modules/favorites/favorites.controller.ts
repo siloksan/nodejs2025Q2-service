@@ -5,10 +5,9 @@ import {
   Param,
   Delete,
   ParseUUIDPipe,
-  HttpException,
   HttpCode,
 } from '@nestjs/common';
-import { CODE_STATUS, ERROR_MESSAGE } from 'src/common/constants';
+import { CODE_STATUS } from 'src/common/constants';
 import { ENTITIES_NAME } from 'src/common/constants/entities-name';
 import { FavoritesService } from './favorites.service';
 

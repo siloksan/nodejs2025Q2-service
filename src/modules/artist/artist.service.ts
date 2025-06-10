@@ -2,10 +2,8 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
 import { ArtistEntity } from './entities/artist.entity';
-import { v4 as uuidv4 } from 'uuid';
 import { DataBase } from 'src/database/in-memory-db/database.service';
-import { CODE_STATUS, ERROR_MESSAGE } from 'src/common/constants';
-import { ENTITIES_NAME } from 'src/common/constants/entities-name';
+import { ERROR_MESSAGE } from 'src/common/constants';
 import { PrismaService } from 'src/database/prisma-module/prisma.service';
 
 @Injectable()

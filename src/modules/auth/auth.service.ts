@@ -1,4 +1,10 @@
-import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Inject,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { JWT_CONSTANTS } from 'src/common/constants';
 import { USER_SEARCH_PROPERTIES } from 'src/common/constants/user-search-properties';
@@ -37,7 +43,7 @@ export class AuthService {
 
     try {
       await this.usersService.verifyPassword(password, user.password);
-      const payload: AuthPayload = { sub: user.id, login: user.login };
+      const payload: AuthPayload = { userId: user.id, login: user.login };
 
       return {
         accessToken: await this.accessJwtService.signAsync(payload),
@@ -51,19 +57,23 @@ export class AuthService {
   async refresh(refreshDto: RefreshDto) {
     const { refreshToken } = refreshDto;
 
+    if (!refreshToken) {
+      throw new UnauthorizedException('No refreshToken in body');
+    }
+
     try {
-      const { sub, login } = await this.refreshJwtService.verifyAsync(
+      const { userId, login } = await this.refreshJwtService.verifyAsync(
         refreshToken,
         {
           secret: JWT_CONSTANTS.refreshJwt.secret,
         },
       );
 
-      const payload: AuthPayload = { sub, login };
+      const payload: AuthPayload = { userId, login };
 
       return {
-        accessToken: this.accessJwtService.sign(payload),
-        refreshToken: this.refreshJwtService.sign(payload),
+        accessToken: await this.accessJwtService.signAsync(payload),
+        refreshToken: await this.refreshJwtService.signAsync(payload),
       };
     } catch (error) {
       throw new HttpException('Invalid token', HttpStatus.FORBIDDEN);

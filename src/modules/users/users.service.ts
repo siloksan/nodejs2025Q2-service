@@ -47,7 +47,7 @@ export class UsersService {
   async findOne(key: UserSearchProperty, value: string) {
     const where = {} as Prisma.UserWhereUniqueInput;
     where[key] = value;
-    const user = await this.prisma.user.findUnique({
+    const user = await this.prisma.user.findFirst({
       where,
     });
 

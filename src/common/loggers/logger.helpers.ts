@@ -7,7 +7,7 @@ import {
   existsSync,
   writeFileSync,
 } from 'node:fs';
-import { join } from 'node:path';
+import { dirname, join } from 'node:path';
 
 export function createFolder(path: string, dirName: string) {
   const levelDir = join(path, dirName);
@@ -43,9 +43,11 @@ export async function rotateLogFile(
     return;
   }
 
+  const dir = dirname(filePath);
   const newName = `${Date.now()}-${level}.log`;
+  const newPath = join(dir, newName);
 
-  renameSync(filePath, newName);
+  renameSync(filePath, newPath);
 }
 
 export function logUncaughtException(logger: LoggerService) {

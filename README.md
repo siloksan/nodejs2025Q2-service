@@ -175,3 +175,19 @@ Ensure the application is running before accessing this link.
 ## License
 
 This project is licensed under the MIT License. See the LICENSE file for details.
+
+## Cross-check:
+
+- **Rename .env.example to .env**
+
+- **Start Docker containers in watch mode, this command creates images and runs their in watch mode:**
+
+  ```bash
+  npm run docker:watch
+  ```
+
+- **Run the tests after launching the application in the container**
+
+  ```bash
+  npm run test:auth
+  ```

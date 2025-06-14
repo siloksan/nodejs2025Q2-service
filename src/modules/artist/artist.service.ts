@@ -2,19 +2,13 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
 import { ArtistEntity } from './entities/artist.entity';
-import { DataBase } from 'src/database/in-memory-db/database.service';
 import { ERROR_MESSAGE } from 'src/common/constants';
 import { PrismaService } from 'src/database/prisma-module/prisma.service';
 
 @Injectable()
 export class ArtistService {
   private readonly artists: Map<string, ArtistEntity>;
-  constructor(
-    private readonly db: DataBase,
-    private readonly prisma: PrismaService,
-  ) {
-    this.artists = db.artists;
-  }
+  constructor(private readonly prisma: PrismaService) {}
 
   async create(createArtistDto: CreateArtistDto) {
     const newArtist = await this.prisma.artist.create({

@@ -6,7 +6,6 @@ import { ArtistModule } from './modules/artist/artist.module';
 import { TrackModule } from './modules/track/track.module';
 import { AlbumModule } from './modules/album/album.module';
 import { FavoritesModule } from './modules/favorites/favorites.module';
-import { DataBaseModule } from './database/in-memory-db/database.module';
 import { PrismaModule } from './database/prisma-module/prisma.module';
 import { CustomLoggerModule } from './common/loggers/logger.module';
 import { LoggerMiddleware } from './common/loggers/logger.middleware';
@@ -22,7 +21,6 @@ import { AuthModule } from './modules/auth/auth.module';
     TrackModule,
     AlbumModule,
     FavoritesModule,
-    DataBaseModule,
     PrismaModule,
     AuthModule,
   ],

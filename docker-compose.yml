@@ -1,7 +1,7 @@
 services:
   postgres:
-    image: siloksan/node2025q2-postgres
-    # build: ./database
+    # image: siloksan/node2025q2-postgres
+    build: ./database
     ports:
       - ${POSTGRES_PORT}:5432
     restart: always
@@ -14,8 +14,8 @@ services:
       - custom-network
 
   app:
-    image: siloksan/node2025q2-app
-    # build: .
+    # image: siloksan/node2025q2-app
+    build: .
     depends_on:
       - postgres
     ports:
@@ -35,6 +35,9 @@ services:
             - node_modules/
         - action: rebuild
           path: package.json
+
+    volumes:
+      - ./logs:/app/logs
     networks:
       - custom-network
 

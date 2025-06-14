@@ -7,13 +7,13 @@ import {
   Delete,
   Put,
   ParseUUIDPipe,
-  HttpException,
   HttpCode,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-password.dto';
-import { ERROR_MESSAGE, CODE_STATUS } from 'src/common/constants';
+import { CODE_STATUS } from 'src/common/constants';
+import { USER_SEARCH_PROPERTIES } from 'src/common/constants/user-search-properties';
 
 @Controller('user')
 export class UsersController {
@@ -31,7 +31,7 @@ export class UsersController {
 
   @Get(':id')
   async findOne(@Param('id', new ParseUUIDPipe()) id: string) {
-    return await this.usersService.findOne(id);
+    return await this.usersService.findOne(USER_SEARCH_PROPERTIES.ID, id);
   }
 
   @Put(':id')

@@ -1,10 +1,11 @@
 import { User } from '@prisma/client';
 import { Exclude } from 'class-transformer';
+import { USER_SEARCH_PROPERTIES } from 'src/common/constants/user-search-properties';
 import { convertTimeStampToMs } from 'src/common/helpers/time-mappers';
 
 export class UserEntity {
-  id: string; // uuid v4
-  login: string;
+  [USER_SEARCH_PROPERTIES.ID]: string; // uuid v4
+  [USER_SEARCH_PROPERTIES.LOGIN]: string;
 
   @Exclude()
   password: string;

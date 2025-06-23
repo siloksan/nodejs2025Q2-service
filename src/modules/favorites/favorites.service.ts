@@ -1,15 +1,11 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { CODE_STATUS, ERROR_MESSAGE } from 'src/common/constants';
 import { EntitiesName } from 'src/common/constants/entities-name';
-import { DataBase } from 'src/database/in-memory-db/database.service';
 import { PrismaService } from 'src/database/prisma-module/prisma.service';
 
 @Injectable()
 export class FavoritesService {
-  constructor(
-    private readonly db: DataBase,
-    private readonly prisma: PrismaService,
-  ) {}
+  constructor(private readonly prisma: PrismaService) {}
   async addToFavorite(entityName: EntitiesName, id: string) {
     try {
       const favoritesId = await this.prisma.favorites.findFirst();

@@ -3,10 +3,14 @@ import { AlbumDto, UpdateAlbumDto } from './dto/album.dto';
 import { AlbumEntity } from './entities/album.entity';
 import { ERROR_MESSAGE } from 'src/common/constants';
 import { PrismaService } from 'src/database/prisma-module/prisma.service';
+import { CustomLogger } from 'src/common/loggers/logger.service';
 
 @Injectable()
 export class AlbumService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly logger: CustomLogger,
+  ) {}
 
   async create(albumDto: AlbumDto) {
     const newAlbum: Omit<AlbumEntity, 'id'> = {
@@ -26,7 +30,7 @@ export class AlbumService {
 
   async findOne(id: string) {
     const album = await this.prisma.album.findUnique({ where: { id } });
-
+    this.logger.debug(id);
     if (!album) {
       throw new HttpException(
         ERROR_MESSAGE[HttpStatus.NOT_FOUND]('Album', id),
